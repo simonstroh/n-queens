@@ -21,20 +21,22 @@ var makeEmptyMatrix = function(n) {
   });
 };
 
-
-
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
-  var matrix = makeEmptyMatrix(3)
-  console.log(matrix)
-
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  var matrix = makeEmptyMatrix(n);
+  for (; n - 1 >= 0; n--) {
+    matrix[n - 1][n - 1] = 1;
+  }
+  return matrix;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = 8; //fixme
+  var solutionCount = factorialize(n);
+  function factorialize(n) {
+    if (n < 0) { return -1; }
+    else if (n === 0) { return 1; }
+    else { return (n * factorialize(n - 1)); }
+  }
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
