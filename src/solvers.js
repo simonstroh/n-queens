@@ -32,10 +32,9 @@ window.findNRooksSolution = function(n) {
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
   var solutionCount = factorialize(n);
+
   function factorialize(n) {
-    if (n < 0) { return -1; }
-    else if (n === 0) { return 1; }
-    else { return (n * factorialize(n - 1)); }
+    if (n < 0) { return -1; } else if (n === 0) { return 1; } else { return (n * factorialize(n - 1)); }
   }
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
@@ -44,10 +43,48 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
-
+  var theMatrix = new Board({ n: n });
+  var qY = 0;
+  var qX = 0;
+  var currentPieces = [];
+  var conflictToggler = function() {
+    console.log("This is the two values for the coordinates of the first chess piece where we begin the function:", qY, qX);
+    // if (currentPieces.length === n) {
+    //   return theMatrix.rows();
+    // } else if (!currentPieces.length === n) {
+    //   currentPieces = [];
+    //   theMatrix = new Board({ n: n });
+    //   if (qY < n - 1) {
+    //     qY++;
+    //   } else if (qY === n - 1 && qX < n - 1) {
+    //     qY = 0;
+    //     qX++;
+    //   }
+    //   conflictToggler();
+    // }
+    theMatrix.togglePiece(qY, qX);
+    currentPieces.push([qY, qX]);
+    console.log('this is n:', n);
+    for (var y = 0; y < n; y++) {
+      console.log('in outer for loop')
+      for (var x = 0; x < n; x++) {
+        console.log('in inner for loop')
+        var canAddPiece = currentPieces.reduce((accum, piece) => {
+          return (!(piece[0] - y === piece[1] - x || (piece[0] - y) * -1 === piece[1] - x || piece[0] === y || piece[1] === x)) ? accum : false;
+        }, true);
+        if (canAddPiece) {
+          console.log("This is the two values for the coordinates of the chess piece where we place the chess piece:", y, x);
+          theMatrix.togglePiece(y, x);
+          currentPieces.push([y, x])
+        }
+      }
+    }
+    console.log("Current piece is", currentPieces);
+    
+  }
+  conflictToggler();
+  console.log("final pieces are ", currentPieces);
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
