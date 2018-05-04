@@ -43,63 +43,112 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
+  var solution;
   var theMatrix = new Board({ n: n });
   var qY = 0;
   var qX = 0;
   var currentPieces = [];
   var conflictToggler = function() {
-    console.log("This is the two values for the coordinates of the first chess piece where we begin the function:", qY, qX);
-
     theMatrix.togglePiece(qY, qX);
     currentPieces.push([qY, qX]);
-    console.log('this is n:', n);
     for (var y = 0; y < n; y++) {
-      console.log('in outer for loop')
-      console.log('x', x);
-      console.log('y', y);
       for (var x = 0; x < n; x++) {
-        console.log('in inner for loop')
-        console.log('x', x);
-        console.log('y', y);
         var canAddPiece = currentPieces.reduce((accum, piece) => {
           return (!(piece[0] - y === piece[1] - x || (piece[0] - y) * -1 === piece[1] - x || piece[0] === y || piece[1] === x)) ? accum : false;
         }, true);
         if (canAddPiece) {
-          console.log("This is the two values for the coordinates of the chess piece where we place the chess piece:", y, x);
           theMatrix.togglePiece(y, x);
-          currentPieces.push([y, x])
+          currentPieces.push([y, x]);
         }
       }
     }
-    console.log("Current pieces are", currentPieces);
     if (currentPieces.length === n) {
-      console.log('currentPieces.length === n');
-      return theMatrix.rows();
+      console.log('final thing', currentPieces);
+      solution = theMatrix;
+      return;
     } else if (currentPieces.length < n) {
-      console.log('currentPieces.length < n')
-      console.log('currentPieces', currentPieces)
       currentPieces = [];
       theMatrix = new Board({ n: n });
       if (qY < n - 1) {
         qY++;
-      } else if (qY === n - 1 && qX < n - 1) {
+      } else if (qY === n - 1) {
         qY = 0;
         qX++;
       }
-      console.log('about to run conflict togger')
       conflictToggler();
     }
   }
-  // debugger;
   conflictToggler();
-  console.log("final pieces are ", currentPieces);
   // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  console.log('solutions', solution.rows());
+  return solution.rows();
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
   // var solutionCount = undefined; //fixme
+  var solution
+  var count = 0;
+  var theMatrix = new Board({ n: n });
+  var qY = 0;
+  var qX = 0;
+  var currentPieces = [];
+  var conflictToggler = function() {
+    theMatrix.togglePiece(qY, qX);
+    currentPieces.push([qY, qX]);
+    for (var y = 0; y < n; y++) {
+      for (var x = 0; x < n; x++) {
+        var canAddPiece = currentPieces.reduce((accum, piece) => {
+          return (!(piece[0] - y === piece[1] - x || (piece[0] - y) * -1 === piece[1] - x || piece[0] === y || piece[1] === x)) ? accum : false;
+        }, true);
+        if (canAddPiece) {
+          theMatrix.togglePiece(y, x);
+          currentPieces.push([y, x]);
+        }
+      }
+    }
 
+    if (qX === n) {
+      console.log('count', count);
+      solution = count;
+      return;
+    }
+
+    if (currentPieces.length === n) {
+      count++;
+      currentPieces = [];
+      theMatrix = new Board({ n: n });
+      if (qY < n - 1) {
+        qY++;
+      } else if (qY === n - 1) {
+        qY = 0;
+        qX++;
+      }
+      conflictToggler();
+    } else if (currentPieces.length < n) {
+      currentPieces = [];
+      theMatrix = new Board({ n: n });
+      if (qY < n - 1) {
+        qY++;
+      } else if (qY === n - 1) {
+        qY = 0;
+        qX++;
+      }
+      conflictToggler();
+    }
+  }
+  conflictToggler();
+  console.log('QUEENCOUNT solution', solution)
+  // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   // return solutionCount;
 };
+
+// console.log(window.countNQueensSolutions(0));
+// console.log(window.countNQueensSolutions(1));
+// console.log(window.countNQueensSolutions(4));
+// console.log(window.countNQueensSolutions(8));
+// console.log(window.countNQueensSolutions(6));
+// console.log(window.countNQueensSolutions(7));
+// console.log(window.countNQueensSolutions(8));
+window.findNQueensSolution(8);
