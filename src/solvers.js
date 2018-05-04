@@ -49,26 +49,18 @@ window.findNQueensSolution = function(n) {
   var currentPieces = [];
   var conflictToggler = function() {
     console.log("This is the two values for the coordinates of the first chess piece where we begin the function:", qY, qX);
-    // if (currentPieces.length === n) {
-    //   return theMatrix.rows();
-    // } else if (!currentPieces.length === n) {
-    //   currentPieces = [];
-    //   theMatrix = new Board({ n: n });
-    //   if (qY < n - 1) {
-    //     qY++;
-    //   } else if (qY === n - 1 && qX < n - 1) {
-    //     qY = 0;
-    //     qX++;
-    //   }
-    //   conflictToggler();
-    // }
+
     theMatrix.togglePiece(qY, qX);
     currentPieces.push([qY, qX]);
     console.log('this is n:', n);
     for (var y = 0; y < n; y++) {
       console.log('in outer for loop')
+      console.log('x', x);
+      console.log('y', y);
       for (var x = 0; x < n; x++) {
         console.log('in inner for loop')
+        console.log('x', x);
+        console.log('y', y);
         var canAddPiece = currentPieces.reduce((accum, piece) => {
           return (!(piece[0] - y === piece[1] - x || (piece[0] - y) * -1 === piece[1] - x || piece[0] === y || piece[1] === x)) ? accum : false;
         }, true);
@@ -79,18 +71,35 @@ window.findNQueensSolution = function(n) {
         }
       }
     }
-    console.log("Current piece is", currentPieces);
-    
+    console.log("Current pieces are", currentPieces);
+    if (currentPieces.length === n) {
+      console.log('currentPieces.length === n');
+      return theMatrix.rows();
+    } else if (currentPieces.length < n) {
+      console.log('currentPieces.length < n')
+      console.log('currentPieces', currentPieces)
+      currentPieces = [];
+      theMatrix = new Board({ n: n });
+      if (qY < n - 1) {
+        qY++;
+      } else if (qY === n - 1 && qX < n - 1) {
+        qY = 0;
+        qX++;
+      }
+      console.log('about to run conflict togger')
+      conflictToggler();
+    }
   }
+  // debugger;
   conflictToggler();
   console.log("final pieces are ", currentPieces);
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  // var solutionCount = undefined; //fixme
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+  // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  // return solutionCount;
 };
